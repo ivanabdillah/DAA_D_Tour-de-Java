@@ -36,8 +36,9 @@ def dfs_paths(source, destination, path=None):
     for next_node in set(GRAPH[source].keys()) - set(path):
         yield from dfs_paths(next_node, destination, path + [next_node])
 
-def terdekat(source, destination):
-    """Cheapest path from source to destination using uniform cost search
+def closest(source, destination):
+    """
+    Cheapest path from source to destination using uniform cost search
     :param source: Source city name
     :param destination: Destination city name
     :returns: Cost and path for cheapest traversal
@@ -55,72 +56,97 @@ def terdekat(source, destination):
             if not next_node in visited or visited[next_node] >= current_cost:
                 visited[next_node] = current_cost
                 priority_queue.put((current_cost, next_node, path + [next_node]))
+                
 
 def main():
-    print("Daftar Kota di Jawa Timur : ")
+    print("\nList of Cities in East Java:")
+
     p = open("Listtown.txt", "r")
     print(p.read())
     print("\n")
+
     cities = open('horizoncity.txt').readlines()
     city = cities[0]
     words = city.split()
     source = random.choice(words)
     goal = random.choice(words)
+
     if source == goal:
-        print("Generate random mengambil asal kota dan tujuan kota yang sama!")
+        print("Generate random origin city same to destination city!")
         sys.exit(1)
+
     count = 0
     paths = dfs_paths(source, goal)
-    cost, jalur_terdekat = terdekat(source, goal)
+    cost, closest_path = closest(source, goal)
+
     for path in paths:
         count+=1
-    print("Ada berapa cara dari " + source + " ke " + goal + " ?", end=' ')
-    ans1 = int(input("\nJumlah cara = "))
-    benar = 0
+
+    print("How many ways are there from " + source + " to " + goal + " ?", end=' ')
+
+    ans1 = int(input("\nNumber of ways = "))
+
+    points = 0
+
     if ans1 == count:
-        print ('Selamat jawaban Anda benar!', end='\n')
-        benar += 1
+        print ('Congratulations your answer is correct!', end='\n')
+        points += 1
+
     else:
-        print('Jawaban Anda salah!', end='\n')
-        print("Jawaban yang benar adalah", count, "cara")
-    print("\nJalur terdekat dari " + source + " ke " + goal + " ?", end ='\n') 
-    d = " -> ".join(jalur_terdekat)
-    ans2 = input('Jalur terdekat adalah = ')
+        print('Wrong Answer!', end='\n')
+        print("The correct answer is ", count, "ways")
+
+    print("\nClosest path from " + source + " to " + goal + " ?", end ='\n') 
+
+    d = " -> ".join(closest_path)
+    ans2 = input('The closest path is = ')
+
     if ans2 == d:
-        print ('Selamat jawaban Anda benar!', end='\n')
-        benar += 1
+        print ('Congratulations your answer is correct!', end='\n')
+        points += 1
+
     else:
-        print('Jawaban Anda salah!', end='\n')
-        print('Jawaban yang benar adalah ')
-        print(' -> '.join(city for city in jalur_terdekat))
-    print('\nBerapa jaraknya ?')
-    ans3 = int(input("Jarak = "))
+        print('Wrong Answer!', end='\n')
+        print('The correct answer is ')
+        print(' -> '.join(city for city in closest_path))
+
+    print('\nHow far is it ?')
+    ans3 = int(input("distance = "))
+
     if ans3 == cost:
-        print ('\nSelamat Jawaban Anda benar!', end='\n')
-        benar += 1
+        print ('\nCongratulations your answer is correct!', end='\n')
+        points += 1
+
     else:
-        print('\nJawaban Anda salah!', end='\n')
-        print("\nJawaban yang benar adalah", cost, "km\n")
-    if benar == 1:
-        print("\nNilai anda adalah 50 ")
-    elif benar == 2:
-        print("\nNilai anda adalah 75 ")
-    elif benar == 3:
-        print("\nNilai anda adalah 100, Selamat anda benar semua!")
-    elif benar == 0:
-        print("\nDibaca mapnya lagi yaaa")
-    print("\nJadi, dari quiz game di atas dapat disimpulkan bahwa kemungkinan jalur yang dapat dilalui adalah :")
+        print('\nWrong Answer!', end='\n')
+        print("\nThe correct answer is ", cost, "km\n")
+
+    if points == 1:
+        print("\nYour score is 50")
+
+    elif points == 2:
+        print("\nYour score is 75")
+
+    elif points == 3:
+        print("\nYour score is 100, Congratulations!")
+
+    elif points == 0:
+        print("\nDon't give up, Please try again")
+
+    print("\nSo, from the game above, it can be concluded that the fastest possible paths that can be passed are : ")
     paths = dfs_paths(source, goal)
     hitung = 0
+
     for path in paths:
         print("\n")
         hitung+=1
         print(hitung, ".")
         print(' -> '.join(city for city in path))
+
     print("\n")
-    print("Jumlah jalur yang bisa ditempuh adalah:", count, "jalur")
-    print("Jalur yang terdekat adalah:",( ' -> '.join(city for city in jalur_terdekat)))
-    print("Dengan jarak",cost, "km\n")
+    print("The number of paths that can be taken are : ", count, "paths")
+    print("The closest path is : ",( ' -> '.join(city for city in closest_path)))
+    print("The distance is ",cost, "km\n")
     
 if __name__ == '__main__':
     main()
