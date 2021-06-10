@@ -1,6 +1,26 @@
 import random
 import sys
 
+def terdekat(source, destination):
+    """Cheapest path from source to destination using uniform cost search
+    :param source: Source city name
+    :param destination: Destination city name
+    :returns: Cost and path for cheapest traversal
+    """
+    from queue import PriorityQueue
+    priority_queue, visited = PriorityQueue(), {}
+    priority_queue.put((0, source, [source]))
+    visited[source] = 0
+    while not priority_queue.empty():
+        (cost, vertex, path) = priority_queue.get()
+        if vertex == destination:
+            return cost, path
+        for next_node in GRAPH[vertex].keys():
+            current_cost = cost + GRAPH[vertex][next_node]
+            if not next_node in visited or visited[next_node] >= current_cost:
+                visited[next_node] = current_cost
+                priority_queue.put((current_cost, next_node, path + [next_node]))
+
 def main():
     print("Daftar Kota di Jawa Timur : ")
     p = open("Listtown.txt", "r")
