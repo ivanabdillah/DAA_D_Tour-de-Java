@@ -135,12 +135,12 @@ def main():
 
     print("\nSo, from the game above, it can be concluded that the fastest possible paths that can be passed are : ")
     paths = dfs_paths(source, goal)
-    hitung = 0
+    number = 0
 
     for path in paths:
         print("\n")
-        hitung+=1
-        print(hitung, ".")
+        number+=1
+        print(number, ".")
         print(' -> '.join(city for city in path))
 
     print("\n")
