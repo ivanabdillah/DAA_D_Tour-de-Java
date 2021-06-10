@@ -1,6 +1,41 @@
 import random
 import sys
 
+GRAPH = {\
+            'Pacitan': {'Blitar': 174, 'Madiun': 108},
+            'Magetan': {'Madiun': 28},
+            'Madiun': {'Magetan': 28, 'Pacitan': 108, 'Bojonegoro': 112},
+            'Bojonegoro': {'Madiun': 112, 'Lamongan': 66},
+            'Lamongan': {'Bojonegoro': 66, 'Surabaya': 46},
+            'Surabaya': {'Lamongan': 46, 'Sidoarjo': 26, 'Bangkalan': 43},
+            'Sidoarjo': {'Surabaya': 26, 'Jombang': 90, 'Malang': 71, 'Pasuruan': 47},
+            'Jombang': {'Sidoarjo': 90, 'Kediri': 35},
+            'Kediri': {'Jombang': 35, 'Blitar': 98},
+            'Blitar': {'Pacitan': 174, 'Kediri': 98, 'Malang': 78},
+            'Malang': {'Blitar': 78, 'Sidoarjo': 71},
+            'Pasuruan': {'Sidoarjo': 47, 'Probolinggo': 47},
+            'Probolinggo': {'Pasuruan': 47, 'Bondowoso': 97},
+            'Bondowoso': {'Probolinggo': 97, 'Jember': 35, 'Banyuwangi': 97},
+            'Jember': {'Bondowoso': 35},
+            'Banyuwangi': {'Bondowoso': 97},
+            'Sumenep': {'Bangkalan': 139},
+            'Bangkalan': {'Sumenep': 139, 'Surabaya': 43}
+        }
+
+def dfs_paths(source, destination, path=None):
+    """All possible paths from source to destination using depth-first search
+    source: Source city name
+    destination: Destination city name
+    path: Current path (Default value = None)
+    yields: All possible paths from start to its destination
+    """
+    if path is None:
+        path = [source]
+    if source == destination:
+        yield path
+    for next_node in set(GRAPH[source].keys()) - set(path):
+        yield from dfs_paths(next_node, destination, path + [next_node])
+
 def terdekat(source, destination):
     """Cheapest path from source to destination using uniform cost search
     :param source: Source city name
